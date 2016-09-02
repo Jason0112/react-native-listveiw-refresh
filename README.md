@@ -1,4 +1,4 @@
 # react-native-listveiw-refresh
 
 ```bash
-npm install react-native-list-refresh --save
+npm install react-native-listview-refresh --save
