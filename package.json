@@ -1,0 +1,32 @@
+{
+ "dependencies": {
+    "is-promise": "^2.0.0"
+  },
+ "devDependencies": {
+    "react": "15.2.1",
+    "react-native": "0.31.0"
+  },
+  "name": "react-native-listveiw-refresh",
+  "version": "1.0.1",
+  "description": "react native listview refresh",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jason0112/react-native-listveiw-refresh.git"
+  },
+  "keywords": [
+    "react",
+    "reactNative",
+    "ListView",
+    "refresh"
+  ],
+  "author": "Jason",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jason0112/react-native-listveiw-refresh/issues"
+  },
+  "homepage": "https://github.com/Jason0112/react-native-listveiw-refresh#readme"
+}
