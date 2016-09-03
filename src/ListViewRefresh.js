@@ -1,9 +1,11 @@
 import {ListView} from 'react-native';
+import RefreshableListView from './RefreshableListView';
 import ControlledRefreshableListView from './ControlledRefreshableListView';
 import RefreshingIndicator from './RefreshingIndicator';
 
-Object.assign(ControlledRefreshableListView, {
+Object.assign(RefreshableListView, {
     ListView,
-    RefreshingIndicator
+    RefreshingIndicator,
+    ControlledRefreshableListView
 });
-module.exports = ControlledRefreshableListView;
+module.exports = RefreshableListView;

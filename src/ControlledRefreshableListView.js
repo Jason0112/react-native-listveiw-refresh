@@ -25,67 +25,62 @@ const LISTVIEW_REF = 'listview';
  *   v - hide loading spinner
  *   {isRefreshing: false}
  */
-ControlledRefreshableListView.propTypes = {
-    colors: PropTypes.array,
-    progressBackgroundColor: PropTypes.string,
-    onRefresh: PropTypes.func.isRequired,
-    isRefreshing: PropTypes.bool.isRequired,
-    waitingForRelease: PropTypes.bool,
-    onHold: PropTypes.func,
-    onPull: PropTypes.func,
-    pullingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    pullingIndicator: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-    holdingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    holdingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    refreshDescription: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    refreshingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    refreshingIndicator: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-    refreshingIndicatorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-    minPulldownDistance: PropTypes.number,
-    ignoreInertialScroll: PropTypes.bool,
-    scrollEventThrottle: PropTypes.number,
-    onScroll: PropTypes.func,
-    onResponderGrant: PropTypes.func,
-    onResponderRelease: PropTypes.func,
-    renderHeaderWrapper: (props, propName, componentName) => {
-        if (props[propName]) {
-            return new Error('The \'renderHeaderWrapper\' prop is no longer used')
-        }
+
+export default  ControlledRefreshableListView = React.createClass({
+    propTypes: {
+        colors: PropTypes.array,
+        progressBackgroundColor: PropTypes.string,
+        onRefresh: PropTypes.func.isRequired,
+        isRefreshing: PropTypes.bool.isRequired,
+        waitingForRelease: PropTypes.bool,
+        onHold: PropTypes.func,
+        onPull: PropTypes.func,
+        pullingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        pullingIndicator: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+        holdingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        holdingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        refreshDescription: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        refreshingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        refreshingIndicator: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+        refreshingIndicatorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+        minPulldownDistance: PropTypes.number,
+        ignoreInertialScroll: PropTypes.bool,
+        scrollEventThrottle: PropTypes.number,
+        onScroll: PropTypes.func,
+        onResponderGrant: PropTypes.func,
+        onResponderRelease: PropTypes.func,
+        renderHeaderWrapper: (props, propName, componentName) => {
+            if (props[propName]) {
+                return new Error('The \'renderHeaderWrapper\' prop is no longer used')
+            }
+        },
+        refreshingIndictatorComponent: (props, propName, componentName) => {
+            if (props[propName]) {
+                return new Error('The \'refreshingIndictatorComponent\' prop has been renamed to \'refreshingIndicatorComponent\'')
+            }
+        },
     },
-    refreshingIndictatorComponent: (props, propName, componentName) => {
-        if (props[propName]) {
-            return new Error('The \'refreshingIndictatorComponent\' prop has been renamed to \'refreshingIndicatorComponent\'')
-        }
-    }
-};
-export default class ControlledRefreshableListView extends Component {
-
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            waitingForRelease: false
-        }
-    }
-
     getDefaultProps() {
         return {
             minPulldownDistance: MIN_PULLDOWN_DISTANCE,
             scrollEventThrottle: SCROLL_EVENT_THROTTLE,
             ignoreInertialScroll: true,
             refreshingIndicatorComponent: RefreshingIndicator,
-            pullingPrompt: '下拉刷新',
-            holdingPrompt: '释放刷新'
+            pullingPrompt: 'Pull to refresh',
+            holdingPrompt: 'Release to refresh',
         }
-    }
-
+    },
+    getInitialState() {
+        return {
+            waitingForRelease: false,
+        }
+    },
     componentWillReceiveProps(nextProps) {
         if (!this.props.isRefreshing && nextProps.isRefreshing && this.isTouching) {
             this.waitingForRelease = true
             this.setState({waitingForRelease: true})
         }
-    }
-
+    },
     componentWillUpdate(nextProps, nextState) {
         if (Platform.OS === 'ios') {
             if (
@@ -99,8 +94,7 @@ export default class ControlledRefreshableListView extends Component {
                 )
             }
         }
-    }
-
+    },
     componentDidUpdate(prevProps, prevState) {
         if (Platform.OS === 'ios') {
             if (
@@ -114,29 +108,27 @@ export default class ControlledRefreshableListView extends Component {
                 )
             }
         }
-    }
-
+    },
     handlePullToRefreshViewAndroidRef(swipeRefreshLayout) {
         this.swipeRefreshLayout = swipeRefreshLayout
-    }
-
+    },
     handleScroll(e) {
-        var scrollY = e.nativeEvent.contentInset.top + e.nativeEvent.contentOffset.y;
-        this.lastScrollY = scrollY;
-        this.lastContentInsetTop = e.nativeEvent.contentInset.top;
-        this.lastContentOffsetX = e.nativeEvent.contentOffset.x;
+        var scrollY = e.nativeEvent.contentInset.top + e.nativeEvent.contentOffset.y
+        this.lastScrollY = scrollY
+        this.lastContentInsetTop = e.nativeEvent.contentInset.top
+        this.lastContentOffsetX = e.nativeEvent.contentOffset.x
 
         if (!this.props.isRefreshing) {
             if ((this.isTouching && scrollY < 0) || (!this.isTouching && !this.props.ignoreInertialScroll)) {
                 if (scrollY < -this.props.minPulldownDistance) {
                     if (!this.isWaitingForRelease()) {
-                        this.waitingForRelease = true;
-                        this.setState({waitingForRelease: true});
+                        this.waitingForRelease = true
+                        this.setState({waitingForRelease: true})
                         this.props.onHold()
                     }
                 } else {
                     if (this.isWaitingForRelease()) {
-                        this.waitingForRelease = false;
+                        this.waitingForRelease = false
                         this.setState({waitingForRelease: false})
                     }
                     this.props.onPull()
@@ -145,23 +137,21 @@ export default class ControlledRefreshableListView extends Component {
         }
 
         this.props.onScroll && this.props.onScroll(e)
-    }
-
+    },
     handleResponderGrant() {
-        this.isTouching = true;
+        this.isTouching = true
         if (this.props.onResponderGrant) {
             this.props.onResponderGrant.apply(null, arguments)
         }
-    }
-
+    },
     handleResponderRelease() {
-        this.isTouching = false;
+        this.isTouching = false
         if (this.props.onResponderRelease) {
             this.props.onResponderRelease.apply(null, arguments)
         }
         if (this.isWaitingForRelease()) {
-            this.waitingForRelease = false;
-            this.setState({waitingForRelease: false});
+            this.waitingForRelease = false
+            this.setState({waitingForRelease: false})
             if (!this.props.isRefreshing) {
                 if (this.props.onRefresh) {
                     this.props.onRefresh()
@@ -169,33 +159,27 @@ export default class ControlledRefreshableListView extends Component {
             }
         }
         this.props.onPull()
-    }
-
+    },
     getContentContainerStyle() {
         if (!this.props.isRefreshing || this.isWaitingForRelease()) return null
 
         return {marginTop: REFRESHING_INDICATOR_HEIGHT}
-    }
-
+    },
     getScrollResponder() {
         return this.refs[LISTVIEW_REF].getScrollResponder()
-    }
-
+    },
     setNativeProps(props) {
         this.refs[LISTVIEW_REF].setNativeProps(props)
-    }
-
+    },
     isWaitingForRelease() {
         return this.waitingForRelease || this.props.waitingForRelease
-    }
-
+    },
     isReleaseUpdate(oldProps, oldState, newProps, newState) {
         return (
             (!oldProps.isRefreshing && newProps.isRefreshing && !this.waitingForRelease) ||
             (oldProps.isRefreshing && oldState.waitingForRelease && !newState.waitingForRelease)
         )
-    }
-
+    },
     renderRefreshingIndicator() {
         var {
             isRefreshing,
@@ -206,7 +190,7 @@ export default class ControlledRefreshableListView extends Component {
             pullingIndicator,
             holdingIndicator,
             refreshingIndicator,
-        } = this.props;
+        } = this.props
         var refreshingIndicatorProps = {
             isRefreshing,
             pullingIndicator,
@@ -217,10 +201,9 @@ export default class ControlledRefreshableListView extends Component {
             refreshingPrompt: refreshingPrompt || refreshDescription,
             isTouching: this.isTouching,
             isWaitingForRelease: this.isWaitingForRelease(),
-        };
+        }
         return createElementFrom(this.props.refreshingIndicatorComponent, refreshingIndicatorProps)
-    }
-
+    },
     render() {
         if (Platform.OS === 'android') {
             return (
@@ -258,7 +241,7 @@ export default class ControlledRefreshableListView extends Component {
             )
         }
     }
-}
+})
 
 var stylesheet = StyleSheet.create({
     container: {
@@ -267,6 +250,7 @@ var stylesheet = StyleSheet.create({
     fillParent: {
         backgroundColor: 'transparent',
         position: 'absolute',
+        top: 0,
         left: 0,
         right: 0,
         bottom: 0

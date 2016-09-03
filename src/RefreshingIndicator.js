@@ -5,32 +5,28 @@ import {
     ActivityIndicator,
     StyleSheet
 } from 'react-native'
-
-RefreshingIndicator.propTypes = {
-    activityIndicatorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
-    stylesheet: PropTypes.object,
-    pullingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
-    holdingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
-    refreshingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
-    pullingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    holdingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    refreshingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    isTouching: PropTypes.bool,
-    isRefreshing: PropTypes.bool,
-    isWaitingForRelease: PropTypes.bool
-};
-export default class RefreshingIndicator extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
+var RefreshingIndicator = React.createClass({
+    propTypes: {
+        activityIndicatorComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+        stylesheet: PropTypes.object,
+        pullingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
+        holdingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
+        refreshingIndicator: PropTypes.oneOfType([PropTypes.string, PropTypes.func, PropTypes.element]),
+        pullingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        holdingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        refreshingPrompt: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+        isTouching: PropTypes.bool,
+        isRefreshing: PropTypes.bool,
+        isWaitingForRelease: PropTypes.bool,
+    },
+    getDefaultProps() {
+        return {
             activityIndicatorComponent: ActivityIndicator,
             isTouching: false,
             isRefreshing: false,
-            isWaitingForRelease: false
+            isWaitingForRelease: false,
         }
-    }
-
+    },
     renderPrompt() {
         if (this.props.isTouching && this.props.isWaitingForRelease) {
             return this.props.holdingPrompt
@@ -43,18 +39,14 @@ export default class RefreshingIndicator extends Component {
                 return null
             }
         }
-    }
-
-
+    },
     renderDescription(styles) {
         return (
             <Text style={styles.description}>
-                {this.renderPrompt()}
-            </Text>
-        )
-    }
-
-
+        {this.renderPrompt()}
+    </Text>
+    )
+    },
     renderActivityIndicator(styles) {
         var activityIndicator
         if (this.props.isTouching && this.props.isWaitingForRelease) {
@@ -72,23 +64,22 @@ export default class RefreshingIndicator extends Component {
         }
 
         return null
-    }
+    },
     render() {
         var styles = Object.assign({}, stylesheet, this.props.stylesheet)
 
         return (
             <View style={[styles.wrapper]}>
-                <View style={[styles.container, styles.loading, styles.content]}>
-                    <View style={[styles.stack]}>
-                        {this.renderDescription(styles)}
-                        {this.renderActivityIndicator(styles)}
-                    </View>
-                </View>
-            </View>
-        )
-    }
-}
-
+            <View style={[styles.container, styles.loading, styles.content]}>
+    <View style={[styles.stack]}>
+            {this.renderDescription(styles)}
+        {this.renderActivityIndicator(styles)}
+    </View>
+        </View>
+        </View>
+    )
+    },
+})
 
 var stylesheet = StyleSheet.create({
     container: {
@@ -110,4 +101,6 @@ var stylesheet = StyleSheet.create({
         marginTop: 10,
         height: 40,
     },
-});
+})
+
+module.exports = RefreshingIndicator
