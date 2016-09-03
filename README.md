@@ -1,12 +1,10 @@
 # react-native-listveiw-refresh
 
 ```bash
-npm i react-native-listview-refresh --save
-
-
+npm install react-native-listview-refresh --save
+```
 
 ```js
-
 import ListViewRefresh from 'react-native-listveiw-refresh'
 
 export default class Example from Component{
